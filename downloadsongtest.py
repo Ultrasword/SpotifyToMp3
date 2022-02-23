@@ -13,10 +13,12 @@ ytdl_format_options = {
     'noplaylist': True,
     'nocheckcertificate': True,
     'ignoreerrors': False,
-    'logtostderr': False,
+    'logtostderr': True,
     'quiet': True,
     'no_warnings': False,
     'default_search': 'auto',
+    'preferredcodec': 'mp3',
+    'preferredquality': '192',
 }
 
 ffmpeg_options = {
@@ -27,6 +29,7 @@ ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 
 # serach
 def youtube_search(ytdl, video_name):
+    # print(video_name)
     try:
         ytdl.get(video_name)
     except:
@@ -56,6 +59,7 @@ def save_song(song, destination):
         f.write(r.content)
         f.close()
 
+base_folder = "downloads/"
 def save_with_ytdl(song, destination):
     url = song['url']
     name = remove_non_char(song['title'])
@@ -64,7 +68,7 @@ def save_with_ytdl(song, destination):
         print(f"'{name}' was found in '{destination}'")
         return
     ydl_info = ytdl_format_options.copy()
-    ydl_info['outtmpl'] = f"{destination}\\{name}.mp3"
+    ydl_info['outtmpl'] = f"downloads\\{destination}\\{name}.mp3"
     '\\%(title)s.%(ext)s'
 
     print(f"Downloading: {name}")
