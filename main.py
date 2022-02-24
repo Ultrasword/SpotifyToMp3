@@ -6,10 +6,10 @@ import sys
 
 
 # test = "https://open.spotify.com/playlist/7m5Iv6ZqXCkmyOlx1X5nNb" #my playlist
-# test = input("Insert link:\n")
+test = input("Insert link:\n")
 # test = "https://open.spotify.com/playlist/1rqAXuMEvnWgdlYRiTBOa1?si=8d799a71541e4646"
 # test = 'https://open.spotify.com/playlist/5iohaZU2LgOc7fSlEMvblz?si=30a4d2173eec4d07'
-test = "https://open.spotify.com/playlist/7vEZBpl2wedPF5lZSmm9Ms?si=0307077798ae4104" # hype
+# test = "https://open.spotify.com/playlist/7vEZBpl2wedPF5lZSmm9Ms?si=0307077798ae4104" # hype
 
 r = requests.get(test)
 soup = BeautifulSoup(r.text,"html.parser")
@@ -61,12 +61,13 @@ del authors
 
 # for i in result:
 #     print(i)
-
+if not os.path.exists("downloads"):
+    os.mkdir("downloads")
 
 
 destination = input("Playlist name?: \t")
-if not os.path.exists(destination):
-    os.mkdir(destination)
+if not os.path.exists("downloads/" + destination):
+    os.mkdir("downloads/" + destination)
 ee = False
 if input("Should I continuously attempt a failed attempt?:\t").lower().startswith('y'):
     ee = True
@@ -90,21 +91,7 @@ for songblock in result:
             print(exc_type, fname, exc_tb.tb_lineno)
             trying = False
             print("Failed to download `" + songblock[0] + "`\t Trying again!")
-            if ee:
+            if not ee:
                 break
 
-exit()
-
-for i in songs:
-    i = i.split("     ")
-    i = i[1] + " " + i[0]
-    
-    trying = True
-    while trying:
-        try:
-            song = downloadsongtest.youtube_search(downloadsongtest.ytdl, i)
-            # continue
-            downloadsongtest.save_with_ytdl(song, destination)
-            trying = False
-        except:
-            print("Error occured, trying again!")
+print("Finished!")

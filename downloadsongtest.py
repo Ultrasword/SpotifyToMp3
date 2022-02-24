@@ -55,22 +55,27 @@ def save_song(song, destination):
         return
     print(f"Downloading: {name}")
     r = requests.get(url)
-    with open(destination+f"\\{name}.mp3", "wb") as f:
+    with open(destination+f"/{name}.mp3", "wb") as f:
         f.write(r.content)
         f.close()
 
-base_folder = "downloads/"
+base_folder = "downloads"
 def save_with_ytdl(song, destination):
     url = song['url']
-    name = remove_non_char(song['title'])
-    lib = os.listdir(destination)
-    if name+".mp3" in lib:
+    name = remove_non_char(song['title']) + ".mp3"
+    lib = os.listdir(os.path.join(base_folder, destination))
+    if name in lib:
         print(f"'{name}' was found in '{destination}'")
         return
+    
+    # create ytdl info 
     ydl_info = ytdl_format_options.copy()
-    ydl_info['outtmpl'] = f"downloads\\{destination}\\{name}.mp3"
-    '\\%(title)s.%(ext)s'
+    # set the output filename
+    path = os.path.join(base_folder, destination, name)
+    ydl_info['outtmpl'] = path
+    
+    # '\\%(title)s.%(ext)s'
 
-    print(f"Downloading: {name}")
+    print(f"Downloading: {name} | To: {path}")
     with youtube_dl.YoutubeDL(ydl_info) as ydl:
         info_dict = ydl.extract_info(url, download=True)
