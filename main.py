@@ -13,11 +13,8 @@ test = input("Insert link:\n")
 
 r = requests.get(test)
 soup = BeautifulSoup(r.text,"html.parser")
-divs = soup.find("div").find_all("div")
-nextstep = soup.find("body").find("div", id="main") # find the main div containig all the songs
-mainContainer = nextstep.find("div").find("div").find_all("div")[3]   # is the third div and find main-view-container div
-# print(mainContainer.prettify()[:500])
-prevSong = mainContainer.find("div", class_="JUa6JJNj7R_Y3i4P8YUX").find_all("div")[3] # find the weird class that stores all the spotify song objects
+divs = soup.find("div", id="main")
+prevSong = divs.find("div", class_="JUa6JJNj7R_Y3i4P8YUX").find_all("div")[3] # find the weird class that stores all the spotify song objects
 songs = prevSong.find_all("a")
 
 # make a parser that can loop through each and check if it is a writer name or a song name
@@ -72,6 +69,8 @@ ee = False
 if input("Should I continuously attempt a failed attempt?:\t").lower().startswith('y'):
     ee = True
 
+downloaded = set(os.listdir("downloads/" + destination))
+
 for songblock in result:
     # all the songs are by title and by authors
     # create search string
@@ -83,6 +82,11 @@ for songblock in result:
         try:
             song = downloadsongtest.youtube_search(downloadsongtest.ytdl, search)
             # continue
+            name = downloadsongtest.remove_non_char(song['title']) + ".mp3"
+            if name in downloaded:
+                print(f"`{name}` already downlaoded!")
+                trying = False
+                break
             downloadsongtest.save_with_ytdl(song, destination)
             trying= False
         except Exception as e:
