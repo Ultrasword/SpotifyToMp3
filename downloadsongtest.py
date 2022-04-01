@@ -33,9 +33,9 @@ def youtube_search(ytdl, video_name):
     try:
         ytdl.get(video_name)
     except:
-        return ytdl.extract_info(f"ytsearch: {video_name}", download=False)['entries'][0]
+        return ytdl.extract_info(f"ytsearch: {video_name}", download=False)['entries']
     else:
-        return ytdl.extract_info(video_name, download=False)
+        return ytdl.extract_info(video_name, download=False)['entries']
 
 def remove_non_char(string):
     n = "".encode('utf-8')
@@ -59,6 +59,7 @@ def save_song(song, destination):
         f.write(r.content)
         f.close()
 
+
 base_folder = "downloads"
 def save_with_ytdl(song, destination):
     url = song['url']
@@ -78,4 +79,5 @@ def save_with_ytdl(song, destination):
 
     print(f"Downloading: {name} | To: {path}")
     with youtube_dl.YoutubeDL(ydl_info) as ydl:
+        # get search results
         info_dict = ydl.extract_info(url, download=True)
