@@ -1,4 +1,4 @@
-\downloads
-\Playerlists
-__pycache__
+.venv
 .vscode
+
+\playlists
