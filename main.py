@@ -6,117 +6,6 @@ import sys
 from source import youtubehandler
 
 
-def main():
-    test = input("Insert link:\n")
-    
-    r = requests.get(test)
-    soup = BeautifulSoup(r.text,"html.parser")
-    divs = soup.find("div", id="main")
-    prevSong = divs.find("div", class_="JUa6JJNj7R_Y3i4P8YUX").find_all("div")[3] # find the weird class that stores all the spotify song objects
-    songs = prevSong.find_all("a")
-
-    max_song_time = 60 * 10 # 60 second x 10 min
-
-    # make a parser that can loop through each and check if it is a writer name or a song name
-    # song name is a class object while author name is href
-    # for i in range(0, len(songs), 3):
-    #     # print(songs[i])
-    #     # print(songs[i+1])
-    #     # print(songs[i+2])
-    #     name = songs[i].text
-    #     print(name)
-
-    result = []
-    songname = None
-    i = 0
-    string = None
-    authors = []
-    while i < len(songs):
-        string = songs[i].prettify()
-        if string[3] == "c":
-            # if aauthors is not empty, then output hte data and clear
-            if authors:
-                result.append([songname, authors.copy()])
-                authors.clear()
-            # it is a class object and thus a song
-            songname = songs[i].text
-            i += 1
-            continue
-        # if not class object
-        # chekc if author
-        elif string[3] == 'h':
-            # it is an author
-            authors.append(songs[i].text)
-            i += 1
-            continue
-        else:
-            print(songs[i])
-    else:
-        result.append([songname, authors])
-    del songname
-    del authors
-
-    # for i in result:
-    #     print(i)
-    if not os.path.exists("downloads"):
-        os.mkdir("downloads")
-
-    destination = input("Playlist name?: \t")
-    if not os.path.exists("downloads/" + destination):
-        os.mkdir("downloads/" + destination)
-    ee = False
-    if input("Should I continuously attempt a failed attempt?:\t").lower().startswith('y'):
-        ee = True
-
-    downloaded = set(os.listdir("downloads/" + destination))
-
-    for songblock in result:
-        # all the songs are by title and by authors
-        # create search string
-        search = f"{songblock[0]} by " + " ".join(songblock[1])
-        print(search)
-        # download search
-        trying = True
-        while trying:
-            try:
-                potential_songs = downloadsongtest.ytdl.extract_info(search, download=False)['entries']
-                # print(len(potential_songs))
-                # print(potential_songs)
-                # exit()
-                
-                # loop through all songs
-                for song in potential_songs:
-                    # print(song)
-                    # is song below time limit
-                    print("Song length: ", song["duration"])
-                    if song["duration"] > max_song_time:
-                        continue
-                    # get name
-                    name = downloadsongtest.remove_non_char(song['title']) + ".mp3"
-                    # check if already downloaded
-                    if name in downloaded:
-                        print(f"`{name}` already downloaded!")
-                        trying = False
-                        break
-                    # download
-                    downloadsongtest.save_with_ytdl(song, destination)
-                    trying= False
-                    break
-                if trying:
-                    print("Failed to find a suitable song to download!\nSkipping to next song!\n")
-                    break
-            except Exception as e:
-                exc_type, exc_obj, exc_tb = sys.exc_info()
-                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                print(exc_type, fname, exc_tb.tb_lineno)
-                trying = False
-                print("Failed to download `" + songblock[0] + "`\t Trying again!")
-                if not ee:
-                    break
-
-    print("Finished!")
-
-
 SPOTIFY_SONGS_DIV = 'JUa6JJNj7R_Y3i4P8YUX'
 MAX_SONG_LENGTH = 60 * 10 # max 10 minutes for a song to be considered for download
 
@@ -145,7 +34,7 @@ class SpotifySong:
         return delim.join([a.name for a  in self.artists])
 
 
-def new():
+def main():
     """Handles and runs the program"""
     # get the link
     spotify_link = input("Please insert the spotify playlist you want to download:\n>")
@@ -241,10 +130,5 @@ def new():
         # finished downloading
         print("Finished")
 
-
-
-
-
-
 if __name__ == "__main__":
-    new()
+    main()
