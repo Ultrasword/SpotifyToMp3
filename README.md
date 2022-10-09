@@ -34,3 +34,8 @@ In this example, I told the program to name my folder 'p' (why not)
 ![Figure 4](docs/example4.png)
 
 And here we are, wish some songs that have been downloaded off spotify :)
+
+# Warning
+
+Spotify may pull off something in the future and then some constants will have to be changed within the codebase.
+In `main.py`, the `SPOTIFY_SONGS_DIV` may have to be changed to suit the new div name!
