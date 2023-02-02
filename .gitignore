@@ -2,3 +2,8 @@
 .vscode
 
 \playlists
+*spec
+dist
+build
+__pycache__
+
