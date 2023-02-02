@@ -10,11 +10,17 @@ SPOTIFY_SONGS_DIV = 'JUa6JJNj7R_Y3i4P8YUX'
 MAX_SONG_LENGTH = 60 * 10 # max 10 minutes for a song to be considered for download
 
 class ConsoleColor:
+    # non windows-terminal
     SONG_YELLOW = "\x1b[4;30;43m"
     ARTIST_BLUE = "\x1b[4;30;44m"
     NULL = "\x1b[4;30;47m"
     VOID = "\x1b[0m"
 
+    # redefine
+    # SONG_YELLOW = ""
+    # ARTIST_BLUE = ""
+    # NULL = ""
+    # VOID = ""
 
 class Artist:
     def __init__(self, artist_name: str, artist_profile: str):
